@@ -1,0 +1,1443 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model contrata_config {
+  id          Int     @id @default(autoincrement())
+  name        String? @db.VarChar(255)
+  am_capacity Int?
+  pm_capacity Int?
+}
+
+model ref_cita {
+  id           Int       @id @default(autoincrement())
+  id_contrata  Int?
+  id_user      Int?      @default(0)
+  id_client    Int?      @default(0)
+  id_case      String?   @default("0") @db.VarChar(255)
+  address      String?   @db.VarChar(255)
+  date         String?   @db.VarChar(255)
+  am_pm        String?   @db.VarChar(2)
+  created_at   DateTime? @default(now()) @db.DateTime(0)
+  cod_cuenta   String?   @db.VarChar(255)
+  id_agente    Int?
+  numero_orden String?   @db.VarChar(255)
+  status_id    Int       @default(1)
+
+  lat              String? @db.VarChar(255)
+  long             String? @db.VarChar(255)
+  contact1         String? @db.VarChar(255)
+  contact2         String? @db.VarChar(255)
+  nombre_entrega   String? @db.VarChar(255)
+  contacto_entrega String? @db.VarChar(255)
+
+  status ref_cita_status @relation(fields: [status_id], references: [id])
+
+  @@index([id_contrata], map: "id_contrata")
+}
+
+model ref_cita_status {
+  id       Int        @id @default(autoincrement())
+  name     String     @db.VarChar(255)
+  ref_cita ref_cita[]
+}
+
+model ref_cita_status_hist {
+  id         Int       @id @default(autoincrement())
+  id_cita    Int
+  new_status Int
+  old_status Int
+  lat        String?   @db.VarChar(255)
+  long       String?   @db.VarChar(255)
+  updated_at DateTime? @default(now()) @db.DateTime(0)
+  updated_by Int
+}
+
+model ref_config {
+  name  String  @id @db.VarChar(255)
+  value String? @db.VarChar(255)
+}
+
+model ref_cita_equipos {
+  id           Int       @id @default(autoincrement())
+  url          String?   @db.VarChar(255)
+  serie        String?   @db.VarChar(255)
+  mac          String?   @db.VarChar(255)
+  service_no   String?   @db.VarChar(255)
+  product_code Int?      @default(0)
+  serv_no      String?   @db.VarChar(255)
+  cita_id      Int
+  created_at   DateTime? @default(now()) @db.DateTime(0)
+  created_by   Int
+}
+
+model agente {
+  idagente                BigInt    @id
+  nombre                  String?   @db.VarChar(100)
+  apellido                String?   @db.VarChar(100)
+  idrol                   BigInt?
+  fechanacimiento         DateTime? @db.DateTime(0)
+  genero                  BigInt?
+  correo                  String?   @db.VarChar(100)
+  password                String?   @db.VarChar(50)
+  telefono                String?   @db.VarChar(11)
+  profesion               String?   @db.VarChar(100)
+  idpais                  BigInt?
+  estado                  BigInt?   @default(1)
+  correo2                 String?   @db.VarChar(100)
+  flagpass                BigInt?
+  iddistribuidor          BigInt?
+  cuenta                  String?   @db.MediumText
+  token                   String?   @db.MediumText
+  url                     String?   @db.MediumText
+  configcanal             String?   @db.MediumText
+  sincronizar             BigInt?   @default(0)
+  fechacreacion           DateTime? @default(now()) @db.DateTime(0)
+  idpadre                 BigInt?
+  idarea                  BigInt?
+  obt_cliente_nuevo       BigInt?   @default(1)
+  cant_cliente_nocontesta BigInt?   @default(0)
+}
+
+model ref_cliente {
+  id                   Int       @id @default(autoincrement())
+  cuenta               String?   @db.VarChar(255)
+  cust_type            String?   @db.VarChar(10)
+  acct_stat            String?   @db.VarChar(10)
+  address_1            String?   @db.VarChar(800)
+  address_2            String?   @db.VarChar(800)
+  address_3            String?   @db.VarChar(800)
+  address_4            String?   @db.VarChar(800)
+  address_5            String?   @db.VarChar(800)
+  contact_name         String?   @db.VarChar(800)
+  contact_number       String?   @db.VarChar(100)
+  email                String?   @db.VarChar(255)
+  region_code          String?   @db.VarChar(255)
+  area_code            String?   @db.VarChar(255)
+  identity_code        String?   @db.VarChar(255)
+  service_order_no     String?   @db.VarChar(255)
+  fecha_creacion_Order String?   @db.VarChar(255)
+  department_code      String?   @db.VarChar(255)
+  date_signed_off      DateTime? @db.DateTime(0)
+  fecha_ultima_fact    DateTime? @db.DateTime(0)
+  monto_ultima_fact    Float?    @db.Float
+}
+
+model distribuidor {
+  iddistribuidor         BigInt    @id
+  nombre                 String?   @db.Text
+  tipo                   BigInt?   @default(1)
+  correo                 String?   @db.Text
+  autorizacion_auto      BigInt?   @default(1)
+  password               String?   @db.Text
+  estado                 BigInt?   @default(1)
+  fecha                  DateTime? @default(now()) @db.DateTime(0)
+  idpadre                BigInt?
+  idarea                 BigInt?
+  autorizacion_duplicado BigInt?   @default(0)
+  am_capacity            Int?
+  pm_capacity            Int?
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model abonados {
+  cve_cliente                String?   @db.VarChar(25)
+  cve_cuenta                 String?   @db.VarChar(25)
+  des_nombre_cliente         String?   @db.VarChar(100)
+  des_apellido1_cliente      String?   @db.VarChar(100)
+  des_apellido2_cliente      String?   @db.VarChar(100)
+  des_ciclo                  String?   @db.VarChar(50)
+  des_rango_antiguedad       String?   @db.VarChar(50)
+  des_forma_pago             String?   @db.VarChar(50)
+  des_grupo_segmento_cliente String?   @db.VarChar(50)
+  des_cuenta                 String?   @db.VarChar(50)
+  des_tipo_cuenta            String?   @db.VarChar(50)
+  des_categoria_cliente      String?   @db.VarChar(50)
+  des_tipo_numero            String?   @db.VarChar(50)
+  des_uso                    String?   @db.VarChar(50)
+  des_producto               String?   @db.VarChar(50)
+  direccion_correo           String?   @db.VarChar(100)
+  sexo                       String?   @db.VarChar(1)
+  num_veces_moroso           String?   @db.VarChar(20)
+  num_telefono               String?   @db.VarChar(15)
+  num_imsi                   String?   @db.VarChar(25)
+  num_imei                   String?   @db.VarChar(25)
+  num_imei_ultimo            String?   @db.VarChar(25)
+  num_contrato               String?   @db.VarChar(30)
+  num_serie                  String?   @db.VarChar(25)
+  num_telf_contacto          String?   @db.VarChar(15)
+  sdo_recarga                String?   @db.VarChar(25)
+  sdo_sms                    String?   @db.VarChar(25)
+  sdo_total                  String?   @db.VarChar(25)
+  imp_ult_pago               String?   @db.VarChar(25)
+  imp_ult_factura            String?   @db.VarChar(25)
+  imp_acumulado              String?   @db.VarChar(25)
+  imp_ultima_recarga         String?   @db.VarChar(25)
+  fch_ultima_recarga         DateTime? @db.DateTime(0)
+  fch_nacimiento             DateTime? @db.DateTime(0)
+  fch_ultima_modificacion    DateTime? @db.DateTime(0)
+  fch_ultima_renovacion      DateTime? @db.DateTime(0)
+  fch_solicitud              DateTime? @db.DateTime(0)
+  fch_venta                  DateTime? @db.DateTime(0)
+  fch_activacion             DateTime? @db.DateTime(0)
+  fch_activacion_real        DateTime? @db.DateTime(0)
+  fch_alta_cli               DateTime? @db.DateTime(0)
+  des_rango_morosidad        String?   @db.VarChar(50)
+  sdo_promocion              String?   @db.VarChar(25)
+
+  @@ignore
+}
+
+model agentecampana {
+  idagentecampana BigInt  @id
+  registros       BigInt?
+  contacto        BigInt?
+  efectividad     BigInt?
+  conversion      BigInt?
+  idagente        BigInt?
+  idcampana       BigInt?
+  tmo             BigInt?
+  llamadas        BigInt?
+  llamadascep     BigInt?
+}
+
+model alarmacampana {
+  idalarmacampana BigInt  @id
+  correo          String? @db.VarChar(100)
+  nivel           BigInt?
+  tipo            BigInt?
+  idcampana       BigInt?
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model analytic {
+  telefono                       String? @db.VarChar(255)
+  num_abonado                    String? @db.VarChar(255)
+  antiguedad_abonado             String? @db.VarChar(255)
+  antiguedad_meses               String? @db.VarChar(255)
+  rango_antiguedad               String? @db.VarChar(255)
+  dias_sin_recarga               String? @db.VarChar(255)
+  rango_recarga                  String? @db.VarChar(255)
+  desc_plan                      String? @db.VarChar(255)
+  tipo_parque                    String? @db.VarChar(255)
+  a1                             String? @db.VarChar(255)
+  marca                          String? @db.VarChar(255)
+  modelo                         String? @db.VarChar(255)
+  tecnologia                     String? @db.VarChar(255)
+  consumo_datos                  String? @db.VarChar(255)
+  consumo_sms                    String? @db.VarChar(255)
+  consumo_voz                    String? @db.VarChar(255)
+  consumo_paquetes               String? @db.VarChar(255)
+  volumen_gb_3g                  String? @db.VarChar(255)
+  volumen_gb_4g                  String? @db.VarChar(255)
+  arpu                           String? @db.VarChar(255)
+  rango_arpu                     String? @db.VarChar(255)
+  nombre_celda_hogar             String? @db.VarChar(255)
+  nombre_celda_trabajo           String? @db.VarChar(255)
+  flag_parque_recargador         String? @db.VarChar(255)
+  promedio_frec_mensual          String? @db.VarChar(255)
+  rango_frecuencia_recarga       String? @db.VarChar(255)
+  promedio_total                 String? @db.VarChar(255)
+  rango_promedio_recarga_mensual String? @db.VarChar(255)
+  dias_sin_recarga_rec           String? @db.VarChar(255)
+  rango_sin_recarga              String? @db.VarChar(255)
+  flag_churn                     String? @db.VarChar(255)
+  p_churn                        String? @db.VarChar(255)
+  range_p_churn                  String? @db.VarChar(255)
+
+  @@ignore
+}
+
+model area {
+  idarea        Int       @id
+  nombre        String    @db.VarChar(255)
+  descripcion   String?   @db.MediumText
+  fechacreacion DateTime? @default(now()) @db.DateTime(0)
+  idpadre       Int?
+  estado        Int?      @default(1)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model area_regla {
+  idarea  Int?
+  idregla Int?
+  valor   Int?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model audit_data_martech {
+  fechaaudit           DateTime? @default(now()) @db.DateTime(0)
+  idcliente            BigInt?
+  idcampana            BigInt?
+  fechainsert          DateTime? @db.DateTime(0)
+  atendido             BigInt?
+  bc_idagente          BigInt?
+  bc_fecha_reagendado  DateTime? @db.DateTime(0)
+  bc_fase              BigInt?
+  desc_fase            String?   @db.MediumText
+  prioridad            BigInt?
+  idcaso_wex           String?   @db.MediumText
+  idblaster            String?   @db.MediumText
+  account_id           String?   @db.MediumText
+  communication_id     String?   @db.MediumText
+  tipocanal            BigInt?
+  flagpermanece        BigInt?
+  idfeedbackcc         BigInt?
+  idgestion            BigInt?
+  g_idagente           BigInt?
+  g_fecha_reagendado   DateTime? @db.DateTime(0)
+  comentario           String?   @db.MediumText
+  fecha_gestion        DateTime? @db.DateTime(0)
+  g_fase               BigInt?
+  nombre_fase          String?   @db.MediumText
+  idtipologia          BigInt?
+  tipologia            String?   @db.MediumText
+  idsubtipologia       BigInt?
+  subtipologia         String?   @db.MediumText
+  nivelcontacto        String?   @db.MediumText
+  idregla              BigInt?
+  valor_regla          BigInt?
+  cont_regla1          BigInt?
+  idllamada            BigInt?
+  fecha_inicio_llamada DateTime? @db.DateTime(0)
+  fecha_fin_llamada    DateTime? @db.DateTime(0)
+  telefono             BigInt?
+  des_nombre_cliente   String?   @db.MediumText
+  correo               String?   @db.MediumText
+  fechacreacion        DateTime? @db.DateTime(0)
+  c1                   String?   @db.MediumText
+  c2                   String?   @db.MediumText
+  c3                   String?   @db.MediumText
+  c4                   String?   @db.MediumText
+  c5                   String?   @db.MediumText
+  c6                   String?   @db.MediumText
+  c7                   String?   @db.MediumText
+  c8                   String?   @db.MediumText
+  c9                   String?   @db.MediumText
+  c10                  String?   @db.MediumText
+  c11                  String?   @db.MediumText
+  c12                  String?   @db.MediumText
+  c13                  String?   @db.MediumText
+  c14                  String?   @db.MediumText
+  c15                  String?   @db.MediumText
+  c16                  String?   @db.MediumText
+  c17                  String?   @db.MediumText
+  c18                  String?   @db.MediumText
+  c19                  String?   @db.MediumText
+  c20                  String?   @db.MediumText
+  c21                  String?   @db.MediumText
+  c22                  String?   @db.MediumText
+  c23                  String?   @db.MediumText
+  c24                  String?   @db.MediumText
+  c25                  String?   @db.MediumText
+  c26                  String?   @db.MediumText
+  c27                  String?   @db.MediumText
+  c28                  String?   @db.MediumText
+  c29                  String?   @db.MediumText
+  c30                  String?   @db.MediumText
+  c31                  String?   @db.MediumText
+  c32                  String?   @db.MediumText
+  c33                  String?   @db.MediumText
+  c34                  String?   @db.MediumText
+  c35                  String?   @db.MediumText
+  cont_reinsert        BigInt?   @default(0)
+
+  @@index([atendido], map: "idx_audit_atendido")
+  @@index([bc_fase], map: "idx_audit_bcfase")
+  @@index([bc_fecha_reagendado], map: "idx_audit_bcfechareagendado")
+  @@index([bc_idagente], map: "idx_audit_bcidagente")
+  @@index([fechaaudit], map: "idx_audit_fechaaudit")
+  @@index([fecha_fin_llamada], map: "idx_audit_fechafin")
+  @@index([fecha_gestion], map: "idx_audit_fechagestion")
+  @@index([fecha_inicio_llamada], map: "idx_audit_fechaini")
+  @@index([fechainsert], map: "idx_audit_fechainsert")
+  @@index([g_fecha_reagendado], map: "idx_audit_gfechareag")
+  @@index([g_idagente], map: "idx_audit_gidagente")
+  @@index([idcampana], map: "idx_audit_idcampana")
+  @@index([idcliente], map: "idx_audit_idcliente")
+  @@index([idfeedbackcc], map: "idx_audit_idfeedbackcc")
+  @@index([idgestion], map: "idx_audit_idgestion")
+  @@index([idllamada], map: "idx_audit_idllamada")
+  @@index([telefono], map: "idx_audit_telefono")
+  // @@index([subtipologia], map: "subtipologia")
+  // @@index([tipologia], map: "tipologia")
+  @@ignore
+}
+
+model audit_data_martech_reinsertar {
+  idaudit              BigInt    @id
+  fechaauditreinsertar DateTime? @default(now()) @db.DateTime(0)
+  fechaaudit           DateTime? @db.DateTime(0)
+  idcliente            BigInt?
+  idcampana            BigInt?
+  fechainsert          DateTime? @db.DateTime(0)
+  atendido             BigInt?
+  bc_idagente          BigInt?
+  bc_fecha_reagendado  DateTime? @db.DateTime(0)
+  bc_fase              BigInt?
+  desc_fase            String?   @db.MediumText
+  prioridad            BigInt?
+  idcaso_wex           String?   @db.MediumText
+  idblaster            String?   @db.MediumText
+  account_id           String?   @db.MediumText
+  communication_id     String?   @db.MediumText
+  tipocanal            BigInt?
+  flagpermanece        BigInt?
+  idfeedbackcc         BigInt?
+  idgestion            BigInt?
+  g_idagente           BigInt?
+  g_fecha_reagendado   DateTime? @db.DateTime(0)
+  comentario           String?   @db.MediumText
+  fecha_gestion        DateTime? @db.DateTime(0)
+  g_fase               BigInt?
+  nombre_fase          String?   @db.MediumText
+  idtipologia          BigInt?
+  tipologia            String?   @db.MediumText
+  idsubtipologia       BigInt?
+  subtipologia         String?   @db.MediumText
+  nivelcontacto        String?   @db.MediumText
+  idregla              BigInt?
+  valor_regla          BigInt?
+  cont_regla1          BigInt?
+  idllamada            BigInt?
+  fecha_inicio_llamada DateTime? @db.DateTime(0)
+  fecha_fin_llamada    DateTime? @db.DateTime(0)
+  telefono             BigInt?
+  des_nombre_cliente   String?   @db.MediumText
+  correo               String?   @db.MediumText
+  fechacreacion        DateTime? @db.DateTime(0)
+  c1                   String?   @db.MediumText
+  c2                   String?   @db.MediumText
+  c3                   String?   @db.MediumText
+  c4                   String?   @db.MediumText
+  c5                   String?   @db.MediumText
+  c6                   String?   @db.MediumText
+  c7                   String?   @db.MediumText
+  c8                   String?   @db.MediumText
+  c9                   String?   @db.MediumText
+  c10                  String?   @db.MediumText
+  c11                  String?   @db.MediumText
+  c12                  String?   @db.MediumText
+  c13                  String?   @db.MediumText
+  c14                  String?   @db.MediumText
+  c15                  String?   @db.MediumText
+  c16                  String?   @db.MediumText
+  c17                  String?   @db.MediumText
+  c18                  String?   @db.MediumText
+  c19                  String?   @db.MediumText
+  c20                  String?   @db.MediumText
+  c21                  String?   @db.MediumText
+  c22                  String?   @db.MediumText
+  c23                  String?   @db.MediumText
+  c24                  String?   @db.MediumText
+  c25                  String?   @db.MediumText
+  c26                  String?   @db.MediumText
+  c27                  String?   @db.MediumText
+  c28                  String?   @db.MediumText
+  c29                  String?   @db.MediumText
+  c30                  String?   @db.MediumText
+  c31                  String?   @db.MediumText
+  c32                  String?   @db.MediumText
+  c33                  String?   @db.MediumText
+  c34                  String?   @db.MediumText
+  c35                  String?   @db.MediumText
+  insertado            BigInt?   @default(0)
+  cont_reinsert        BigInt?   @default(0)
+  // @@index([subtipologia], map: "subtipologia")
+  // @@index([tipologia], map: "tipologia")
+
+  @@index([atendido], map: "idx_auditre_atendido")
+  @@index([bc_fase], map: "idx_auditre_bcfase")
+  @@index([bc_fecha_reagendado], map: "idx_auditre_bcfechareagendado")
+  @@index([bc_idagente], map: "idx_auditre_bcidagente")
+  @@index([fechaaudit], map: "idx_auditre_fechaaudit")
+  @@index([fecha_fin_llamada], map: "idx_auditre_fechafin")
+  @@index([fecha_gestion], map: "idx_auditre_fechagestion")
+  @@index([fecha_inicio_llamada], map: "idx_auditre_fechaini")
+  @@index([fechainsert], map: "idx_auditre_fechainsert")
+  @@index([g_fecha_reagendado], map: "idx_auditre_gfechareag")
+  @@index([g_idagente], map: "idx_auditre_gidagente")
+  @@index([idcampana], map: "idx_auditre_idcampana")
+  @@index([idcliente], map: "idx_auditre_idcliente")
+  @@index([idfeedbackcc], map: "idx_auditre_idfeedbackcc")
+  @@index([idgestion], map: "idx_auditre_idgestion")
+  @@index([idllamada], map: "idx_auditre_idllamada")
+  @@index([insertado], map: "idx_auditre_insertado")
+  @@index([telefono], map: "idx_auditre_telefono")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model base {
+  id                 BigInt?
+  cuenta             BigInt?
+  telefono           BigInt?
+  des_nombre_cliente String?   @db.VarChar(100)
+  correo             String?   @db.MediumText
+  fechacreacion      DateTime? @default(now()) @db.DateTime(0)
+  c1                 String?   @db.MediumText
+  c2                 String?   @db.MediumText
+  c3                 String?   @db.MediumText
+  c4                 String?   @db.MediumText
+  c5                 String?   @db.MediumText
+  c6                 String?   @db.MediumText
+  c7                 String?   @db.MediumText
+  c8                 String?   @db.MediumText
+  c9                 String?   @db.MediumText
+  c10                String?   @db.MediumText
+  c11                String?   @db.MediumText
+  c12                String?   @db.MediumText
+  c13                String?   @db.MediumText
+  c14                String?   @db.MediumText
+  c15                String?   @db.MediumText
+  c16                String?   @db.MediumText
+  c17                String?   @db.MediumText
+  c18                String?   @db.MediumText
+  c19                String?   @db.MediumText
+  c20                String?   @db.MediumText
+  c21                String?   @db.MediumText
+  c22                String?   @db.MediumText
+  c23                String?   @db.MediumText
+  c24                String?   @db.MediumText
+  c25                String?   @db.MediumText
+  c26                String?   @db.MediumText
+  c27                String?   @db.MediumText
+  c28                String?   @db.MediumText
+  c29                String?   @db.MediumText
+  c30                String?   @db.MediumText
+  c31                String?   @db.MediumText
+  c32                String?   @db.MediumText
+  c33                String?   @db.MediumText
+  c34                String?   @db.MediumText
+  c35                String?   @db.MediumText
+
+  @@index([telefono])
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model base_campana {
+  idcliente        BigInt?
+  idcampana        BigInt?
+  atendido         BigInt?   @default(0)
+  idagente         BigInt?
+  flagllamada      BigInt?   @default(0)
+  tipo             BigInt?
+  flag_regla       BigInt?
+  flag_fecha       DateTime? @db.DateTime(0)
+  fecha_llamada    DateTime? @db.DateTime(0)
+  nivelcontacto    BigInt?   @default(0)
+  fase             BigInt?   @default(1)
+  idcaso           String?   @db.VarChar(100)
+  fechacreacion    DateTime? @db.DateTime(0)
+  fechainsert      DateTime? @default(now()) @db.DateTime(0)
+  prioridad        BigInt?   @default(100)
+  idcaso_wex       String?   @db.Text
+  idblaster        String?   @db.Text
+  account_id       String?   @db.Text
+  communication_id String?   @db.Text
+  tipocanal        BigInt?
+  flagpermanece    BigInt?   @default(0)
+  idfeedbackcc     BigInt?
+  cont_reinsert    BigInt?   @default(0)
+
+  @@index([flag_fecha])
+  @@index([idcampana])
+  @@index([idcliente])
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model base_tmp {
+  id                             String?   @db.MediumText
+  antiguedad                     BigInt?
+  producto                       String?   @db.MediumText
+  plan                           String?   @db.MediumText
+  plan_migrar                    String?   @db.MediumText
+  telefono                       String?   @db.MediumText
+  flag_regla                     BigInt?
+  flag_fecha                     String?   @db.MediumText
+  cve_cliente                    String?   @db.MediumText
+  cve_cuenta                     String?   @db.MediumText
+  des_nombre_cliente             String?   @db.MediumText
+  des_apellido1_cliente          String?   @db.MediumText
+  des_apellido2_cliente          String?   @db.MediumText
+  des_ciclo                      String?   @db.MediumText
+  des_rango_antiguedad           String?   @db.MediumText
+  des_forma_pago                 String?   @db.MediumText
+  des_grupo_segmento_cliente     String?   @db.MediumText
+  des_cuenta                     String?   @db.MediumText
+  des_tipo_cuenta                String?   @db.MediumText
+  des_categoria_cliente          String?   @db.MediumText
+  des_tipo_numero                String?   @db.MediumText
+  des_uso                        String?   @db.MediumText
+  direccion                      String?   @db.MediumText
+  sexo                           String?   @db.MediumText
+  num_veces_moroso               String?   @db.MediumText
+  num_imsi                       String?   @db.MediumText
+  num_imei                       String?   @db.MediumText
+  num_imei_ultimo                String?   @db.MediumText
+  num_contrato                   String?   @db.MediumText
+  num_serie                      String?   @db.MediumText
+  num_telf_contacto              String?   @db.MediumText
+  sdo_recarga                    BigInt?
+  sdo_sms                        BigInt?
+  sdo_total                      BigInt?
+  sdo_promocion                  BigInt?
+  imp_ult_pago                   String?   @db.MediumText
+  imp_ult_factura                String?   @db.MediumText
+  imp_acumulado                  String?   @db.MediumText
+  imp_ultima_recarga             String?   @db.MediumText
+  fch_ultima_recarga             DateTime? @db.DateTime(0)
+  fch_nacimiento                 DateTime? @db.DateTime(0)
+  fch_ultima_modificacion        DateTime? @db.DateTime(0)
+  fch_ultima_renovacion          DateTime? @db.DateTime(0)
+  fch_solicitud                  DateTime? @db.DateTime(0)
+  fch_venta                      DateTime? @db.DateTime(0)
+  fch_activacion                 DateTime? @db.DateTime(0)
+  fch_activacion_real            DateTime? @db.DateTime(0)
+  fch_alta_cli                   DateTime? @db.DateTime(0)
+  des_rango_morosidad            String?   @db.MediumText
+  num_abonado                    String?   @db.VarChar(255)
+  antiguedad_abonado             String?   @db.MediumText
+  rango_antiguedad               String?   @db.MediumText
+  dias_sin_recarga               String?   @db.MediumText
+  rango_recarga                  String?   @db.MediumText
+  tipo_parque                    String?   @db.MediumText
+  a1                             String?   @db.MediumText
+  marca                          String?   @db.MediumText
+  modelo                         String?   @db.MediumText
+  tecnologia                     String?   @db.MediumText
+  consumo_datos                  String?   @db.MediumText
+  consumo_sms                    String?   @db.MediumText
+  consumo_voz                    String?   @db.MediumText
+  consumo_paquetes               String?   @db.MediumText
+  volumen_gb_3g                  String?   @db.MediumText
+  volumen_gb_4g                  String?   @db.MediumText
+  arpu                           String?   @db.MediumText
+  rango_arpu                     String?   @db.MediumText
+  nombre_celda_hogar             String?   @db.MediumText
+  nombre_celda_trabajo           String?   @db.MediumText
+  flag_parque_recargador         String?   @db.MediumText
+  promedio_frec_mensual          String?   @db.MediumText
+  rango_frecuencia_recarga       String?   @db.MediumText
+  promedio_total                 String?   @db.MediumText
+  rango_promedio_recarga_mensual String?   @db.MediumText
+  dias_sin_recarga_rec           String?   @db.MediumText
+  rango_sin_recarga              String?   @db.MediumText
+  flag_churn                     String?   @db.MediumText
+  p_churn                        String?   @db.MediumText
+  range_p_churn                  String?   @db.MediumText
+
+  @@ignore
+}
+
+model baseb {
+  id                      BigInt    @id
+  nombre                  String?   @db.VarChar(255)
+  antiguedad              BigInt?
+  producto                String?   @db.VarChar(255)
+  plan                    String?   @db.VarChar(255)
+  direccion               String?   @db.VarChar(255)
+  datos                   String?   @db.VarChar(255)
+  voz                     String?   @db.VarChar(255)
+  sms                     String?   @db.VarChar(255)
+  paquetes                String?   @db.VarChar(255)
+  promos_especiales       String?   @db.VarChar(255)
+  roaming                 String?   @db.VarChar(255)
+  marca                   String?   @db.VarChar(255)
+  tiempo_terminal         String?   @db.VarChar(255)
+  terminal_antiguedad     String?   @db.VarChar(255)
+  uso_datos               String?   @db.VarChar(255)
+  uso_4g                  String?   @db.VarChar(255)
+  compra_paquetes         String?   @db.VarChar(255)
+  genera_excedente        String?   @db.VarChar(255)
+  uso_roaming             String?   @db.VarChar(255)
+  contrato_vigente        String?   @db.VarChar(255)
+  rango_llamada           String?   @db.VarChar(255)
+  rango_recarga           String?   @db.VarChar(255)
+  rango_mora              String?   @db.VarChar(255)
+  estado                  String?   @db.VarChar(255)
+  fecha_alta              String?   @db.VarChar(255)
+  fecha_reno              String?   @db.VarChar(255)
+  llamadas                String?   @db.VarChar(255)
+  duraciones              String?   @db.VarChar(255)
+  destinos                String?   @db.VarChar(255)
+  mou_dou                 String?   @db.VarChar(255)
+  arpm                    String?   @db.VarChar(255)
+  trabajo                 String?   @db.VarChar(255)
+  hogar                   String?   @db.VarChar(255)
+  facturacion             String?   @db.VarChar(255)
+  celdas_ocio             String?   @db.VarChar(255)
+  uso_celda               String?   @db.VarChar(255)
+  dias_sin_trafico        String?   @db.VarChar(255)
+  usos                    String?   @db.VarChar(255)
+  valor                   String?   @db.VarChar(255)
+  frecuencias             String?   @db.VarChar(255)
+  churn                   String?   @db.VarChar(255)
+  arpus_datos             String?   @db.VarChar(255)
+  arpus_voz               String?   @db.VarChar(255)
+  excedentes              String?   @db.VarChar(255)
+  total                   String?   @db.VarChar(255)
+  arpu_paquetes           String?   @db.VarChar(255)
+  arpo_voz                String?   @db.VarChar(255)
+  arpu_datos              String?   @db.VarChar(255)
+  arpu_sms                String?   @db.VarChar(255)
+  cargos_basicos          String?   @db.VarChar(255)
+  montos                  String?   @db.VarChar(255)
+  eventos                 String?   @db.VarChar(255)
+  plan_migrar             String?   @db.VarChar(100)
+  telefono                BigInt?
+  segmento                String?   @db.VarChar(255)
+  meses_contrato          String?   @db.VarChar(25)
+  categoria               String?   @db.VarChar(200)
+  plan_antiguedad         String?   @db.VarChar(255)
+  plan_ultimo_cambio      String?   @db.VarChar(255)
+  plan_fecha_alta         String?   @db.VarChar(200)
+  plan_beneficio          String?   @db.VarChar(255)
+  plan_promo_fidelizacion String?   @db.VarChar(255)
+  icc                     String?   @db.VarChar(200)
+  usim                    String?   @db.VarChar(250)
+  modelo                  String?   @db.VarChar(255)
+  gama                    String?   @db.VarChar(255)
+  tecnologia              String?   @db.VarChar(100)
+  sistema_operativo       String?   @db.VarChar(100)
+  movilidad               String?   @db.VarChar(200)
+  cod_cliente             BigInt?
+  flag_regla              BigInt?
+  flag_fecha              DateTime? @db.DateTime(0)
+}
+
+model bodega {
+  idbodega BigInt  @id
+  nombre   String? @db.VarChar(100)
+}
+
+model campana {
+  idcampana              BigInt    @id
+  ideje                  BigInt?
+  idpais                 BigInt?
+  nombre                 String?   @db.VarChar(100)
+  estado                 BigInt?
+  medio                  BigInt?
+  vigenciainicial        DateTime? @db.DateTime(0)
+  vigenciafinal          DateTime? @db.DateTime(0)
+  script                 String?   @db.MediumText
+  scripturl              String?   @db.MediumText
+  contacto               BigInt?
+  efectividad            BigInt?
+  conversion             BigInt?
+  tmo                    BigInt?
+  tipoalta               BigInt?
+  mediocontacto          BigInt?
+  fechacreacion          DateTime? @default(now()) @db.DateTime(0)
+  llamadas               BigInt?
+  llamadascep            BigInt?
+  tip_cliente            BigInt?
+  tip_carga              BigInt?
+  iddistribuidor         BigInt?
+  idadministrador        BigInt?
+  idarea                 BigInt?
+  replicado              Int?      @default(0)
+  autorizacion           BigInt?   @default(0)
+  comentario             String?   @db.MediumText
+  autorizacion_duplicado BigInt?   @default(0)
+}
+
+model campana_email {
+  idcampana_email BigInt  @id
+  email           String? @db.Text
+  tipo            BigInt?
+  estado          BigInt?
+}
+
+model canal_digital {
+  idcanaldigital      BigInt  @id
+  idtipologia         BigInt?
+  nombre_tipologia    String? @db.Text
+  tipologiajson       String? @db.MediumText
+  idsubtipologia      BigInt?
+  nombre_subtipologia String? @db.Text
+  subtipologiajson    String? @db.MediumText
+  idaccion            BigInt?
+  nombre_accion       String? @db.Text
+  accionjson          String? @db.MediumText
+  idcampana           BigInt?
+  idcaso              BigInt?
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cantidadllamada {
+  count BigInt?
+
+  @@ignore
+}
+
+model catalogo_criterio {
+  idcatalogo_criterio BigInt  @id
+  column_name         String? @db.Text
+  alias               String? @db.VarChar(200)
+  tipo                BigInt?
+  tabla               String? @db.VarChar(50)
+  orden               BigInt?
+  visible             BigInt?
+}
+
+model catalogocolumnas {
+  idcatalogocolumna BigInt  @id
+  nombre            String? @db.VarChar(50)
+  alias             String? @db.VarChar(50)
+  tipo              BigInt?
+  tabla             BigInt?
+  orden             BigInt?
+  visible           BigInt?
+  idpais            BigInt?
+}
+
+model categoria_cobranza {
+  idcategoria_cobranza BigInt  @id
+  nombre               String? @db.VarChar(100)
+  estado               BigInt?
+}
+
+model categoria_cobro {
+  idcategoria_cobro BigInt  @id
+  nombre            String? @db.VarChar(100)
+  estado            BigInt?
+}
+
+model ciclo {
+  idciclo           BigInt  @id
+  nombre            String? @db.VarChar(200)
+  dia               BigInt?
+  hora_cierre       BigInt?
+  hora_distribucion BigInt?
+  estado            BigInt?
+}
+
+model ciclovida {
+  idciclovida BigInt  @id
+  dian        BigInt?
+  nombre      String? @db.VarChar(50)
+  mensaje     String? @db.VarChar(120)
+  idcampana   BigInt?
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model clientesrepetidos_campana {
+  id               String?   @db.Text
+  nombre           String?   @db.Text
+  plan             String?   @db.Text
+  plan_migrar      String?   @db.Text
+  producto         String?   @db.Text
+  telefono         BigInt?
+  idcampana        BigInt?
+  idcampana_origen BigInt?
+  iddistribuidor   BigInt?
+  fecha            DateTime? @default(now()) @db.DateTime(0)
+  estado           BigInt?   @default(1)
+  correo           String?   @db.Text
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model conf_blacklist {
+  mensaje1  String? @db.MediumText
+  mensaje2  String? @db.MediumText
+  variable1 String? @db.MediumText
+  variable2 String? @db.MediumText
+  boton1ini String? @db.MediumText
+  boton2ini String? @db.MediumText
+  boton3ini String? @db.MediumText
+  imagenini String? @db.MediumText
+  probatel1 String? @db.MediumText
+  cantidad  BigInt?
+  estado    BigInt?
+
+  @@ignore
+}
+
+model config {
+  idconfig BigInt  @id
+  nombre   String? @db.Text
+  valor    String? @db.Text
+  estado   BigInt? @default(1)
+}
+
+model criterio {
+  idcriterio        BigInt  @id
+  idcatalogocolumna BigInt?
+  condicion         BigInt?
+  valor             String? @db.VarChar(20)
+  idcampana         BigInt?
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model detalle_envio {
+  idenvio   BigInt?
+  telefono  BigInt?
+  tipoenvio BigInt?
+
+  @@ignore
+}
+
+model detalle_mensajeria {
+  iddetalle_mensajeria BigInt  @id
+  valor                String? @db.VarChar(100)
+  condicion            BigInt?
+  idmensajeria         BigInt?
+  idcatalogo_criterio  BigInt?
+}
+
+model disponibilizar_cliente {
+  id              BigInt    @id @default(autoincrement())
+  query1          String?   @db.MediumText
+  query2          String?   @db.MediumText
+  response1       String?   @db.MediumText
+  response2       String?   @db.MediumText
+  idcampana       BigInt?
+  idcliente       BigInt?
+  idagente        BigInt?
+  comentario      String?   @db.MediumText
+  fecha_consulta  DateTime? @db.DateTime(0)
+  fecha_respuesta DateTime? @db.DateTime(0)
+  estado          Int?      @default(1)
+}
+
+model eje {
+  ideje   BigInt  @id
+  nombre  String? @db.VarChar(40)
+  color   String? @db.VarChar(8)
+  idpais  BigInt?
+  estado  BigInt? @default(1)
+  idpadre BigInt?
+  idarea  BigInt?
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model encabezado {
+  nom_columna String? @db.Text
+  columna     String? @db.Text
+  idcampana   BigInt?
+
+  @@ignore
+}
+
+model entrevista {
+  identrevista      BigInt    @id
+  nivelcontacto     BigInt?
+  nombre            String?   @db.Text
+  identrevistapadre BigInt?
+  idpais            BigInt
+  estado            BigInt    @default(1)
+  fechacreacion     DateTime? @default(now()) @db.DateTime(0)
+  idpadre           BigInt?
+  idarea            BigInt?
+}
+
+model envio_masivo {
+  idenvio       BigInt    @id
+  nombre        String?   @db.Text
+  cantidad      BigInt?   @default(0)
+  estado        BigInt?   @default(1)
+  fechacreacion DateTime? @default(now()) @db.DateTime(0)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model estado_agente {
+  idagente  BigInt?
+  idestado  BigInt?
+  inicio    DateTime? @db.DateTime(0)
+  fin       DateTime? @db.DateTime(0)
+  idcampana BigInt?
+
+  @@ignore
+}
+
+model estado_situacion {
+  idestado_situacion BigInt  @id
+  nombre             String? @db.VarChar(100)
+  estado             BigInt?
+}
+
+model feriado {
+  idferiado   BigInt  @id
+  idpais      BigInt?
+  dia         BigInt?
+  mes         BigInt?
+  estado      BigInt?
+  descripcion String? @db.VarChar(100)
+}
+
+model frecuencia_mensajeria {
+  idfrecuencia_mensajeria BigInt  @id
+  dia                     String? @db.VarChar(11)
+  hora                    String? @db.VarChar(10)
+  idmensajeria            BigInt?
+}
+
+model gestion {
+  idgestion          BigInt    @id
+  idcampana          BigInt?
+  idagente           BigInt?
+  comentario         String?   @db.Text
+  fecha              DateTime? @default(now()) @db.DateTime(0)
+  idsubtipologia     BigInt?
+  idcliente          BigInt?
+  altapostventa      BigInt?   @default(0)
+  idtipologia        BigInt?
+  fechaaltapostventa DateTime? @db.DateTime(0)
+  fecha_llamada      DateTime? @db.DateTime(0)
+  idllamada          BigInt?
+  mediocontacto      String?   @db.Text
+  idmodalidad        BigInt?
+  idplan             BigInt?
+  terminal           String?   @db.Text
+  idbodega           BigInt?
+  direccion          String?   @db.Text
+  numreferencia      String?   @db.Text
+  fase               BigInt?   @default(1)
+  idregla            BigInt?
+  valor_regla        BigInt?
+  cont_regla1        BigInt?   @default(0)
+
+  @@index([idcampana])
+  @@index([idcliente])
+  @@index([idtipologia])
+}
+
+model gestor_oport {
+  idgestor      BigInt  @id
+  idregla       BigInt?
+  nombre_regla  String? @db.Text
+  reglajson     String? @db.Text
+  idaccion      BigInt?
+  nombre_accion String? @db.Text
+  accionjson    String? @db.Text
+  idcampana     BigInt?
+  idcaso        BigInt?
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model historico_agente_edit {
+  idagente      BigInt?
+  idrolnuevo    BigInt?
+  idrolanterior BigInt?
+  nuevo         String?   @db.Text
+  anterior      String?   @db.Text
+  comentario    String?   @db.Text
+  fec           DateTime? @db.DateTime(0)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model historico_estado_agente {
+  idagente  BigInt?
+  idestado  BigInt?
+  inicio    DateTime? @db.DateTime(0)
+  fin       DateTime? @db.DateTime(0)
+  idcampana BigInt?
+
+  @@ignore
+}
+
+model horariocampana {
+  idhorariocampana BigInt  @id
+  horainicio       BigInt?
+  horafin          BigInt?
+  diaejecucion     String? @db.VarChar(20)
+  idcampana        BigInt?
+}
+
+model llamada {
+  idllamada BigInt    @id
+  idcliente BigInt?
+  idagente  BigInt?
+  idcampana BigInt?
+  inicio    DateTime? @default(now()) @db.DateTime(0)
+  fin       DateTime? @db.DateTime(0)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model log_agentes {
+  idagente   BigInt?
+  accion     BigInt?
+  comentario String?   @db.Text
+  fecha      DateTime? @db.DateTime(0)
+
+  @@ignore
+}
+
+model log_area_regla {
+  idlog   BigInt    @id
+  idarea  BigInt?
+  idadmin BigInt?
+  fecha   DateTime? @default(now()) @db.DateTime(0)
+  regla1  BigInt?
+  regla2  BigInt?
+  regla3  BigInt?
+  regla4  BigInt?
+  regla5  BigInt?
+  regla6  BigInt?   @default(1)
+  regla7  BigInt?   @default(1)
+}
+
+model log_msg {
+  idlog       BigInt    @id
+  url         String?   @db.Text
+  token       String?   @db.Text
+  telefono    String?   @db.Text
+  msg         String?   @db.Text
+  cuenta      String?   @db.Text
+  config      String?   @db.MediumText
+  response    String?   @db.Text
+  estado      BigInt?
+  fechainicio DateTime? @db.DateTime(0)
+  fechafin    DateTime? @db.DateTime(0)
+}
+
+model master_data_martech {
+  idfeedbackcc        BigInt    @id
+  telefono            BigInt?
+  idcliente           BigInt?
+  idcampana           BigInt?
+  atendido            BigInt?
+  bc_idagente         BigInt?
+  bc_fecha_reagendado DateTime? @db.DateTime(0)
+  bc_fase             BigInt?
+  prioridad           BigInt?
+  idcaso_wex          String?   @db.Text
+  idblaster           String?   @db.Text
+  account_id          String?   @db.Text
+  communication_id    String?   @db.Text
+  tipocanal           BigInt?
+  flagpermanece       BigInt?
+  cont_reinsert       BigInt?   @default(0)
+  fechainsert         DateTime? @db.DateTime(0)
+  fecha_insert        DateTime? @default(now()) @db.DateTime(0)
+  fecha_update        DateTime? @default(now()) @db.DateTime(0)
+
+  // @@index([account_id], map: "account_id")
+  // @@index([communication_id], map: "communication_id")
+  // @@index([idblaster], map: "idblaster")
+  // @@index([idcaso_wex], map: "idcaso_wex")
+  @@index([atendido], map: "idx_masterdata_atendido")
+  @@index([bc_fase], map: "idx_masterdata_bcfase")
+  @@index([bc_fecha_reagendado], map: "idx_masterdata_bcfechare")
+  @@index([bc_idagente], map: "idx_masterdata_bcidagente")
+  @@index([cont_reinsert], map: "idx_masterdata_contre")
+  @@index([fecha_insert], map: "idx_masterdata_fechain")
+  @@index([fechainsert], map: "idx_masterdata_fechainsert")
+  @@index([fecha_update], map: "idx_masterdata_fechaup")
+  @@index([idcampana], map: "idx_masterdata_idcampana")
+  @@index([idcliente], map: "idx_masterdata_idcliente")
+  @@index([telefono], map: "idx_masterdata_telefono")
+  @@index([tipocanal], map: "idx_masterdata_tipocanal")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model mensaje_campana {
+  idcampana  BigInt?
+  mensaje1   String? @db.Text
+  mensaje2   String? @db.Text
+  habilitar1 BigInt?
+  habilitar2 BigInt?
+
+  @@ignore
+}
+
+model mensajeria {
+  idmensajeria   BigInt    @id
+  nombre         String?   @db.VarChar(200)
+  tipo           BigInt?
+  asunto         String?   @db.VarChar(200)
+  descripcion    String?   @db.MediumText
+  fecha          DateTime? @default(now()) @db.DateTime(0)
+  json           String?   @db.Text
+  estado         BigInt?   @default(1)
+  conservar      BigInt?
+  feriado        BigInt?
+  campoaux       String?   @db.Text
+  iddistribuidor BigInt?
+  idcampana      BigInt?
+}
+
+model modalidad {
+  idmodalidad BigInt  @id
+  nombre      String? @db.VarChar(100)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model numbers {
+  n Int
+
+  @@ignore
+}
+
+model plan {
+  idplan BigInt  @id
+  nombre String? @db.VarChar(100)
+}
+
+model producto {
+  idproducto  BigInt  @id
+  nombre      String? @db.Text
+  descripcion String? @db.MediumText
+  estado      BigInt? @default(1)
+}
+
+model rango {
+  idrango BigInt  @id
+  nombre  String? @db.VarChar(100)
+  estado  BigInt?
+}
+
+model razonalarma {
+  idrazon     BigInt  @id
+  nombre      String  @db.VarChar(100)
+  idpais      BigInt
+  color       String  @db.VarChar(8)
+  descripcion String? @db.Text
+}
+
+model recordatorio {
+  idrecordatorio BigInt  @id
+  nombre         String? @db.VarChar(50)
+  valor          BigInt?
+}
+
+model ref_cliente_load {
+  id                   Int       @id @default(autoincrement())
+  cuenta               String?   @db.VarChar(255)
+  cust_type            String?   @db.VarChar(10)
+  acct_stat            String?   @db.VarChar(10)
+  address_1            String?   @db.VarChar(800)
+  address_2            String?   @db.VarChar(800)
+  address_3            String?   @db.VarChar(800)
+  address_4            String?   @db.VarChar(800)
+  address_5            String?   @db.VarChar(800)
+  contact_name         String?   @db.VarChar(800)
+  contact_number       String?   @db.VarChar(100)
+  email                String?   @db.VarChar(255)
+  region_code          String?   @db.VarChar(255)
+  area_code            String?   @db.VarChar(255)
+  identity_code        String?   @db.VarChar(255)
+  service_order_no     String?   @db.VarChar(255)
+  fecha_creacion_Order String?   @db.VarChar(255)
+  department_code      String?   @db.VarChar(255)
+  date_signed_off      DateTime? @db.DateTime(0)
+  fecha_ultima_fact    DateTime? @db.DateTime(0)
+  monto_ultima_fact    Float?    @db.Float
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ref_producto {
+  owning_acct_no      String?   @db.VarChar(200)
+  serv_no             String?   @db.VarChar(255)
+  product_code        Int?
+  product_description String?   @db.VarChar(255)
+  product_family      String?   @db.VarChar(255)
+  product_sub_family  String?   @db.VarChar(255)
+  cust_prod_status    String?   @db.VarChar(255)
+  inst_date           DateTime? @db.DateTime(0)
+  removal_date        DateTime? @db.DateTime(0)
+  cma_mac_address     String?   @db.VarChar(255)
+  mai_serial_number   String?   @db.VarChar(255)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ref_producto_load {
+  owning_acct_no      String?   @db.VarChar(200)
+  serv_no             String?   @db.VarChar(255)
+  product_code        Int?
+  product_description String?   @db.VarChar(255)
+  product_family      String?   @db.VarChar(255)
+  product_sub_family  String?   @db.VarChar(255)
+  cust_prod_status    String?   @db.VarChar(255)
+  inst_date           DateTime? @db.DateTime(0)
+  removal_date        DateTime? @db.DateTime(0)
+  cma_mac_address     String?   @db.VarChar(255)
+  mai_serial_number   String?   @db.VarChar(255)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ref_servicio {
+  owning_acct_no      String?   @db.VarChar(200)
+  serv_type           String?   @db.VarChar(255)
+  serv_no             String?   @db.VarChar(255)
+  inst_date           DateTime? @db.DateTime(0)
+  removal_date        DateTime? @db.DateTime(0)
+  service_status_code String?   @db.VarChar(255)
+  address_1           String?   @db.VarChar(255)
+  address_2           String?   @db.VarChar(255)
+  address_3           String?   @db.VarChar(255)
+  address_4           String?   @db.VarChar(255)
+  address_5           String?   @db.VarChar(255)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ref_servicio_load {
+  owning_acct_no      String?   @db.VarChar(200)
+  serv_type           String?   @db.VarChar(255)
+  serv_no             String?   @db.VarChar(255)
+  inst_date           DateTime? @db.DateTime(0)
+  removal_date        DateTime? @db.DateTime(0)
+  service_status_code String?   @db.VarChar(255)
+  address_1           String?   @db.VarChar(255)
+  address_2           String?   @db.VarChar(255)
+  address_3           String?   @db.VarChar(255)
+  address_4           String?   @db.VarChar(255)
+  address_5           String?   @db.VarChar(255)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model regla {
+  idregla     BigInt
+  descripcion String? @db.Text
+  valor       BigInt? @default(0)
+  estado      BigInt? @default(1)
+
+  @@ignore
+}
+
+model rol {
+  idrol       BigInt  @id
+  nombre      String? @db.VarChar(50)
+  descripcion String? @db.VarChar(50)
+  idpais      BigInt
+}
+
+model segmento {
+  idsegmento BigInt  @id
+  nombre     String? @db.VarChar(200)
+  estado     BigInt?
+}
+
+model sequence {
+  seq_name      String  @id @db.VarChar(50)
+  current_val   BigInt
+  increment_val BigInt  @default(1)
+  tabla         String? @db.VarChar(75)
+  campo         String? @db.VarChar(75)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model sistema {
+  sistema     String  @db.VarChar(50)
+  url         String  @db.VarChar(150)
+  descripcion String  @db.VarChar(150)
+  idsistema   BigInt?
+
+  @@ignore
+}
+
+model socket {
+  connectionid String? @db.VarChar(50)
+  idcampana    BigInt
+  idagente     BigInt
+
+  @@id([idcampana, idagente])
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model temp_caso_cliente {
+  nombre    String? @db.Text
+  telefono  String? @db.Text
+  correo    String? @db.Text
+  idcaso    BigInt?
+  idcampana BigInt?
+  id        String? @db.VarChar(100)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model temp_catalogoagente {
+  idcampana BigInt?
+  idagente  BigInt?
+  telefono  BigInt?
+  idcliente BigInt?
+  correo    String? @db.VarChar(150)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model temp_cliente {
+  id             String?   @db.Text
+  nombre         String?   @db.Text
+  plan           String?   @db.Text
+  plan_migrar    String?   @db.Text
+  producto       String?   @db.Text
+  telefono       String?   @db.Text
+  idcampana      BigInt?
+  iddistribuidor BigInt?
+  fecha          DateTime? @default(now()) @db.DateTime(0)
+  correo         String?   @db.Text
+  objeto         String?   @db.MediumText
+
+  // @@index([id], map: "id")
+  // @@index([telefono], map: "telefono")
+  @@ignore
+}
+
+model tipificacion_inbound {
+  idtipificacion    BigInt  @id
+  tipo_cliente      BigInt?
+  telefono          BigInt?
+  intencion_inicial BigInt?
+  postventa_sac     BigInt?
+  productos         String? @db.MediumText
+  tiponoventa       BigInt?
+  latitud           BigInt?
+  longitud          BigInt?
+  motivo            String? @db.MediumText
+  idcampana         BigInt?
+  idagente          BigInt?
+  infocliente       String? @db.MediumText
+  estado            BigInt?
+  fase              BigInt?
+  tipolead          BigInt?
+  fechainsert       String? @db.VarChar(100)
+}
+
+model tipologia {
+  idtipologia      BigInt  @id
+  nivelcontacto    BigInt?
+  nombre           String? @db.VarChar(50)
+  idtipologiapadre BigInt?
+  idpais           BigInt
+  estado           BigInt  @default(1)
+  idpadre          BigInt?
+  idarea           BigInt?
+}
+
+model tipologia_recolector {
+  idtipologia      BigInt    @id
+  nivelcontacto    BigInt?
+  nombre           String?   @db.MediumText
+  idtipologiapadre BigInt?
+  idpais           Int?
+  estado           Int?      @default(1)
+  fechacreacion    DateTime? @default(now()) @db.DateTime(0)
+  idpadre          BigInt?
+  idarea           BigInt?
+}

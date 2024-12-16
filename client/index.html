@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#ff4713" />
+  <meta name="description" content="Portabilidad" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
+  <title>Final</title>
+
+
+  <link rel="manifest" href="/media/logos/manifest.json">
+  <meta name="msapplication-TileColor" content="#ff4713">
+  <meta name="theme-color" content="#ff4713">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="shortcut icon" href="/media/logos/favicon.ico" />
+  <link rel="stylesheet" id="layout-styles-anchor" href="/splash-screen.css" />
+  <link href="/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+  <script src="/assets/js/scripts.bundle.js"></script>
+  
+</head>
+
+<body id="kt_body" class="page-loading">
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <!--begin::Theme mode setup on page load-->
+  <script type="text/javascript">
+    function disableBack() { window.history.forward(); }
+    setTimeout("disableBack()", 0);
+    window.onunload = function () { null };
+</script>
+  <script>
+    let themeMode = 'system'
+
+    if (localStorage.getItem('kt_theme_mode_value')) {
+      themeMode = localStorage.getItem('kt_theme_mode_value')
+    }
+
+    if (themeMode === 'system') {
+      themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    document.documentElement.setAttribute('data-bs-theme', themeMode)
+  </script>
+  <div id="root" style="height: 100%;"></div>
+  <div id="root-modals"></div>
+  <div id="splash-screen" class="splash-screen">
+    <img src="/media/logos/default-dark.png" class="dark-logo" alt="dark logo" />
+    <img src="/media/logos/default.png" class="light-logo" alt="light logo" />
+    <span>Cargando ...</span>
+  </div>
+  <script type="module" src="/src/main.tsx"></script>
+
+</body>
+
+</html>

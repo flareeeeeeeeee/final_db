@@ -1,0 +1,33 @@
+.label-calendar {
+    text-transform: uppercase;
+    font-size: medium;
+    font-weight: bold;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.rbc-event-content {
+    text-align: center;
+    align-items: center;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+
+    /* background-color: #FA4613; */
+
+    font-size: medium;
+    font-weight: bold;
+    width: 100%;
+    height: 10vh;
+
+    text-wrap: wrap !important;
+
+}
+.rbc-day-bg{
+    cursor: pointer !important;
+}
+/* .rbc-event{
+    background-color: #FA4613;
+} */

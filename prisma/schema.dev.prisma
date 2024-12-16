@@ -1,0 +1,106 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model contrata_config {
+  id          Int    @id @default(autoincrement())
+  name        String
+  am_capacity Int    @default(0)
+  pm_capacity Int    @default(0)
+}
+
+model ref_cita {
+  id           Int       @id @default(autoincrement())
+  id_contrata  Int?
+  id_user      Int?
+  id_client    Int?
+  id_case      Int?
+  address      String?   @db.VarChar(255)
+  date         String?   @db.VarChar(255)
+  am_pm        String?   @db.VarChar(2)
+  created_at   DateTime? @default(now()) @db.DateTime(0)
+  cod_cuenta   String?   @db.VarChar(255)
+  id_agente    Int?
+  numero_orden String?   @db.VarChar(255)
+
+  @@index([id_contrata], map: "id_contrata")
+}
+
+model ref_config {
+  name  String @id
+  value String
+}
+
+model agente {
+  idagente                BigInt    @id
+  nombre                  String?   @db.VarChar(100)
+  apellido                String?   @db.VarChar(100)
+  idrol                   BigInt?
+  fechanacimiento         DateTime? @db.DateTime(0)
+  genero                  BigInt?
+  correo                  String?   @db.VarChar(100)
+  password                String?   @db.VarChar(50)
+  telefono                String?   @db.VarChar(11)
+  profesion               String?   @db.VarChar(100)
+  idpais                  BigInt?
+  estado                  BigInt?   @default(1)
+  correo2                 String?   @db.VarChar(100)
+  flagpass                BigInt?
+  iddistribuidor          BigInt?
+  cuenta                  String?   @db.MediumText
+  token                   String?   @db.MediumText
+  url                     String?   @db.MediumText
+  configcanal             String?   @db.MediumText
+  sincronizar             BigInt?   @default(0)
+  fechacreacion           DateTime? @default(now()) @db.DateTime(0)
+  idpadre                 BigInt?
+  idarea                  BigInt?
+  obt_cliente_nuevo       BigInt?   @default(1)
+  cant_cliente_nocontesta BigInt?   @default(0)
+}
+
+model ref_cliente {
+  id                   Int       @id @default(autoincrement())
+  cuenta               String?   @db.VarChar(255)
+  cust_type            String?   @db.VarChar(10)
+  acct_stat            String?   @db.VarChar(10)
+  address_1            String?   @db.VarChar(800)
+  address_2            String?   @db.VarChar(800)
+  address_3            String?   @db.VarChar(800)
+  address_4            String?   @db.VarChar(800)
+  address_5            String?   @db.VarChar(800)
+  contact_name         String?   @db.VarChar(800)
+  contact_number       String?   @db.VarChar(100)
+  email                String?   @db.VarChar(255)
+  region_code          String?   @db.VarChar(255)
+  area_code            String?   @db.VarChar(255)
+  identity_code        String?   @db.VarChar(255)
+  service_order_no     String?   @db.VarChar(255)
+  fecha_creacion_Order String?   @db.VarChar(255)
+  department_code      String?   @db.VarChar(255)
+  date_signed_off      DateTime? @db.DateTime(0)
+  fecha_ultima_fact    DateTime? @db.DateTime(0)
+  monto_ultima_fact    Float?    @db.Float
+}
+
+model distribuidor {
+  iddistribuidor         BigInt    @id
+  nombre                 String?   @db.Text
+  tipo                   BigInt?   @default(1)
+  correo                 String?   @db.Text
+  autorizacion_auto      BigInt?   @default(1)
+  password               String?   @db.Text
+  estado                 BigInt?   @default(1)
+  fecha                  DateTime? @default(now()) @db.DateTime(0)
+  idpadre                BigInt?
+  idarea                 BigInt?
+  autorizacion_duplicado BigInt?   @default(0)
+  am_capacity            Int?
+  pm_capacity            Int?
+}

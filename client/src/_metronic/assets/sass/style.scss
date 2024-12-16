@@ -1,0 +1,351 @@
+//
+// Theme style
+//
+  @import 'react-big-calendar/lib/sass/styles';
+// Initialize
+@import "init";
+
+// Components
+@import "components/components";
+
+
+// Layout
+@import "layout/base/layout";
+@import "layout/layout";
+
+
+.popup {
+    animation-name: fadeIn;
+    animation-duration: 0.4s;
+    background-clip: padding-box;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    left: 0px;
+    list-style-type: none;
+    margin: 0;
+    outline: none;
+    padding: 0;
+    position: absolute;
+    z-index: 999;
+    text-align: left;
+    top: 0px;
+    overflow: hidden;
+    -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.popup li {
+    clear: both;
+    color: rgba(0, 0, 0, 0.65);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 22px;
+    margin: 0;
+    transition: all .3s;
+    white-space: nowrap;
+    -webkit-transition: all .3s;
+}
+
+
+.tags-input-container {
+    background-color: #F9F9F9;
+    border-radius: 5px;
+    width: 100%;
+    padding: .2em .5em;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .5em;
+    font-size: 14px;
+}
+
+.tag-item {
+    background-color: #cecece;
+    padding: .5em .75em;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tag-item .close {
+    height: 20px;
+    width: 20px;
+    background-color: rgb(48, 48, 48);
+    color: #fff;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: .5em;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.tag-item i {
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.tags-input {
+    flex-grow: 1;
+    padding: .7em 1em;
+    border-radius: 5px;
+    color: #8f8f8f;
+    background-color: #F9F9F9;
+    border: none;
+    outline: none;
+}
+
+.popup li>i {
+    margin-right: 8px;
+}
+
+.pagination-container {
+    display: flex;
+    list-style-type: none;
+}
+
+.pagination-container .pagination-item {
+    padding: 0 12px;
+    height: 32px;
+    text-align: center;
+    margin: auto 4px;
+    color: black;
+    display: flex;
+    box-sizing: border-box;
+    align-items: center;
+    letter-spacing: 0.01071em;
+    border-radius: 5px;
+    line-height: 1.43;
+    font-size: 13px;
+    min-width: 32px;
+}
+
+.pagination-container .pagination-item.dots:hover {
+    background-color: transparent;
+    cursor: default;
+}
+
+.pagination-container .pagination-item:hover {
+    background-color: #FF4713;
+    color: white;
+
+    cursor: pointer;
+}
+
+.pagination-container .pagination-item.selected {
+    background-color: #FF4713;
+    color: white;
+
+}
+
+.tableFixHead {
+    overflow: auto;
+    height: 100px;
+
+}
+
+.tableFixHead th {
+    border: 1px solid;
+    box-shadow: 0px 1px;
+
+}
+
+.tableFixHead thead tr {
+    border-bottom: black solid 2px !important;
+
+}
+
+.tableFixHead thead th {
+    position: sticky;
+    background-color: inherit !important;
+    top: 0;
+    z-index: 1;
+}
+
+.actions-custom-container .actions {
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+}
+
+.actions-custom-container:hover .actions {
+    opacity: 1;
+}
+
+/* Just common table stuff. Really. */
+table {
+    // border-collapse: collapse;
+
+    width: 100%;
+}
+
+th,
+td {
+    white-space: nowrap;
+}
+
+th,
+td {
+    padding: 8px 16px;
+
+
+}
+
+td {
+    max-width: 300px;
+    text-overflow: ellipsis !important;
+}
+
+th {
+    background: #eee;
+}
+
+.pagination-container .pagination-item .arrow::before {
+    position: relative;
+    /* top: 3pt;
+    Uncomment this to lower the icons as requested in comments*/
+    content: '';
+    /* By using an em scale, the arrows will size with the font */
+    display: inline-block;
+    width: 0.4em;
+    height: 0.4em;
+    border-right: 0.12em solid rgba(0, 0, 0, 0.87);
+    border-top: 0.12em solid rgba(0, 0, 0, 0.87);
+}
+
+.pagination-container .pagination-item .arrow.left {
+    transform: rotate(-135deg) translate(-50%);
+}
+
+.pagination-container .pagination-item .arrow.right {
+    transform: rotate(45deg);
+}
+
+.pagination-container .pagination-item.disabled {
+    pointer-events: none;
+}
+
+.pagination-container .pagination-item.disabled .arrow::before {
+    border-right: 0.12em solid rgba(0, 0, 0, 0.43);
+    border-top: 0.12em solid rgba(0, 0, 0, 0.43);
+}
+
+.pagination-container .pagination-item.disabled:hover {
+    background-color: transparent;
+    cursor: default;
+}
+
+.border-ddark {
+    border-color: #bebebe !important;
+}
+
+
+.select-search-results {
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+}
+
+.select-search-search {
+    background-color: darkgray;
+    text-align: center;
+    padding: 15px;
+}
+
+.select-search-input {
+    font-size: 25px;
+}
+
+.tombola-main {
+    background-color: black;
+    padding: 10px 30px;
+
+}
+
+.tombola-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.tombola-wrapper {
+    width: 100px;
+}
+
+.tombola {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 120px auto;
+    transform-style: preserve-3d;
+    transform-origin: center center -480px;
+    transform: rotateX(0deg) translateZ(-480px);
+
+}
+
+
+.tombola-panel {
+    top: 0px;
+    padding: 10px 0px;
+    font-size: 40px;
+    font-weight: bold;
+    text-transform: uppercase;
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    color: black;
+    text-align: center;
+    line-height: 2em;
+    background: #F7EAD0;
+}
+
+.tombola-p1 {
+    transform: translateZ(150px);
+}
+
+.tombola-p2 {
+    transform: rotateX(-36deg) translateZ(150px);
+}
+
+.tombola-p3 {
+    transform: rotateX(-72deg) translateZ(150px);
+}
+
+.tombola-p4 {
+    transform: rotateX(-108deg) translateZ(150px);
+}
+
+.tombola-p5 {
+    transform: rotateX(-144deg) translateZ(150px);
+}
+
+.tombola-p6 {
+    transform: rotateX(-180deg) translateZ(150px);
+}
+
+.tombola-p7 {
+    transform: rotateX(-216deg) translateZ(150px);
+}
+
+.tombola-p8 {
+    transform: rotateX(-252deg) translateZ(150px);
+}
+
+.tombola-p9 {
+    transform: rotateX(-288deg) translateZ(150px);
+}
+
+.tombola-p0 {
+    transform: rotateX(36deg) translateZ(150px);
+}
+
+.winner {
+    font-size: 3rem;
+}
